@@ -1,0 +1,46 @@
+---
+#- name: install nexus
+#  hosts: localhost
+ # become: true
+  #tasks:
+    - name: install yum
+      yum:
+        name:
+          - wget
+          - java-1.8.0-openjdk
+
+    - name: creates directory
+      file:
+        path: /opt/nexus
+        state: directory
+
+    - name: download nexus.repo
+      get_url:
+        url: http://www.sonatype.org/downloads/nexus-latest-bundle.tar.gz
+        dest: /opt/nexus
+
+    - name: untar nexus
+      unarchive:
+        src: /opt/nexus/nexus-2.14.14-01-bundle.tar.gz
+        dest: /opt/nexus
+
+    - name: adding the user
+      user:
+        name: nexus
+    - name: file permissions
+      file:
+        path: /opt/nexus
+        state: directory
+        recurse: yes
+        owner: nexus
+        group: nexus
+
+    - name: template a file
+      copy:
+        src: ../templates/nexus.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+        mode: '777'
+
+

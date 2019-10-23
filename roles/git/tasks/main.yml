@@ -1,0 +1,5 @@
+---
+- name: installgit
+  yum:
+     name: git
+     state: present
